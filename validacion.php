@@ -26,7 +26,7 @@ if(!$_SESSION["log"]){
         header("Location: http://192.168.58.132/Almacen/register.php");
     }else{
         $_SESSION["passwd"] = password_hash($_POST["passwd1"], PASSWORD_DEFAULT);
-        header("Location: http://192.168.58.132/Proyectos/conexion.php");
+        header("Location: http://192.168.58.132/Almacen/conexion.php");
     }
 
 }else{
