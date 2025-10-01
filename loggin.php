@@ -1,7 +1,6 @@
 <?php
 session_start();
 $email = isset($_SESSION["email"]) ? $_SESSION["email"] :"";
-$passwd = isset($_SESSION["passwd"]) ? $_SESSION["passwd"] : "";
 $_SESSION["log"] = true;
 $_SESSION["logged"] = false;
 ?>
@@ -19,7 +18,7 @@ $_SESSION["logged"] = false;
         
         <form action="validacion.php" method="POST">
             E-mail: <input type="email" name="email" placeholder="example@domain.es" value="<?php echo $email?>"> <br>
-            Contraseña: <input type="password" name="passwd1" placeholder="Password" value="<?php echo $passwd?>"> <br>
+            Contraseña: <input type="password" name="passwd1" placeholder="Password"> <br>
             <input type="submit" name="submit"> <br> <br>
             <h3>Si aún no se ha registrado:<h3> <a href="register.php"><input type="button" value="Registrarse"></a>
         </form>

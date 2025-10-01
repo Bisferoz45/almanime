@@ -23,14 +23,13 @@ if($_SESSION["logged"]){
             $stmt->bindParam(":passwd", $passwd);
             $stmt->execute();
         }catch(PDOException $e){
-            echo "ERROR: ". $e->getMessage();
+            $_SESSION['error'] = "La cuenta ya se encuentra registrada.";
         }
 
         if(!isset($_SESSION["error"]) && $_SESSION["error"] == ""){
-            $error = $_SESSION['error'];
-            echo "ERROR: $error";
-            $_SESSION["error"] = null;
+            header("Location: http://192.168.58.132/Almacen/register.php");
         }else{
+            $_SESSION["logged"] = true;
             header("Location: http://192.168.58.132/Almacen/MainPage/index.php");
         }
 
@@ -57,23 +56,23 @@ if($_SESSION["logged"]){
                 $stmt->bindParam(":email", $userEmail, PDO::PARAM_STR);
                 $stmt->execute();
 
-                $res = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-                echo $res["email"];
-                echo $res["passwd"];
+                $res = $stmt->fetch(PDO::FETCH_ASSOC);
 
                 if(!$res){
                     $_SESSION["error"] = "No se a hencontrado la cuenta.";
                     header("Location: http://192.168.58.132/Almacen/loggin.php");
                 }else{
                     if(password_verify($userPasswd, $res['passwd'])){
+                        $_SESSION["logged"] = true;
                         header("Location: http://192.168.58.132/Almacen/MainPage/index.php");
                     }else{
-                        var_dump($userPasswd, $res['password']);
                         $_SESSION["error"] = "La contraseña es incorrecta.";
-                        //header("Location: http://192.168.58.132/Almacen/loggin.php");
+                        echo "Las contraseñas no coinciden";
+                        header("Location: http://192.168.58.132/Almacen/loggin.php");
                     }
                 }
+
+                $_SESSION["user"] = $res['user'];
 
             }catch(PDOException $e){
                 $_SESSION["error"] = $e->getMessage();

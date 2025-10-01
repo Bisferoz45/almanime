@@ -12,6 +12,11 @@ if(!$_SESSION["log"]){
         $_SESSION["passwd"] = '';
     }
 
+    if(isset($_POST["passwd1"]) && $_POST["passwd1"] == ""){
+        $_SESSION["error"] = 'Establezca una contraseña ';
+        $_SESSION["passwd"] = '';
+    }
+
     if(!filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)){
         $_SESSION['error'] .= 'El email es invaido ';
         $_SESSION['email'] = '';
@@ -30,10 +35,8 @@ if(!$_SESSION["log"]){
     }
 
 }else{
+    $_SESSION["email"] = $_POST["email"];
+    $_SESSION["passwd"] = $_POST["passwd1"];
     header("Location: http://192.168.58.132/Almacen/conexion.php");
 }
-
-
-/*
-*/
 ?>
