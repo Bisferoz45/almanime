@@ -10,11 +10,11 @@ if(!$_SESSION["logged"]){
     </head>
     <body>
         <h2>Registro de libros</h2>
-        <form>
-            Titulo: <br> <input type="text" placeholder="Anime name"> <br> <br>
-            Descripción: <br> <input type="text" placeholder="Description"> <br> <br>
-            Autor: <br> <input type="text" placeholder="Author name"> <br> <br>
-            Demografía: <select>
+        <form action="valBook.php" method="post">
+            Titulo: <br> <input type="text" name="aniName" placeholder="Anime name"> <br> <br>
+            Descripción: <br> <input type="text" name="desc" placeholder="Description"> <br> <br>
+            Autor: <br> <input type="text" name="autor" placeholder="Author name"> <br> <br>
+            Demografía: <select name="demo">
                 <option vaue="">-- Seleccione una demografía --</option>
                 <option value="kodomo">Kodomo</option>
                 <option value="shonen">Shonen</option>
@@ -22,15 +22,29 @@ if(!$_SESSION["logged"]){
                 <option value="seinen">Seinen</option>
                 <option value="josei">Josei</option>
             </select> <br> <br>
-            Genero/s <br>
-            <input type="checkbox" name="intereses" value="Acción"> Acción <br>
-            <input type="checkbox" name="intereses" value="Aventura"> Avenura <br>
-            <input type="checkbox" name="intereses" value="Ciencia Ficción"> Ciencia ficcón <br>
-            <input type="checkbox" name="intereses" value="Comedia"> Comedia <br>
-            <input type="checkbox" name="intereses" value="Ecchi"> Ecchi <br>
-            <input type="checkbox" name="intereses" value="Fantasía"> Fantasía <br>
-            <input type="checkbox" name="intereses" value="Gore"> Gore <br>
-            <input type="checkbox" name="intereses" value="Terror"> Terror <br>
+            Genero/s: <br>
+            <input type="checkbox" name="genero[]" value="Accion"> Acción <br>
+            <input type="checkbox" name="genero[]" value="Aventura"> Avenura <br>
+            <input type="checkbox" name="genero[]" value="Ciencia Ficcion"> Ciencia ficcón <br>
+            <input type="checkbox" name="genero[]" value="Comedia"> Comedia <br>
+            <input type="checkbox" name="genero[]" value="Ecchi"> Ecchi <br>
+            <input type="checkbox" name="genero[]" value="Fantasia"> Fantasía <br>
+            <input type="checkbox" name="genero[]" value="Gore"> Gore <br>
+            <input type="checkbox" name="genero[]" value="Misterio"> Misterio <br>
+            <input type="checkbox" name="genero[]" value="Terror"> Terror <br> <br>
+
+            Fecha de lanzamiento: <input type="date" name="date"> <br> <br>
+            Inserte imágen de portada: <input type="file" accept="image/*" name="img" placeholder="INsert image"> <br>
+            <input type="submit" name="submit" value="Enviar">
+
+
         </form>
+
+        <?php
+            if(isset($_SESSION["error"])){
+                echo "ERROR: " . $_SESSION["error"];
+                $_SESSION["error"] = null;
+            }
+        ?>
     </body>
 </html>

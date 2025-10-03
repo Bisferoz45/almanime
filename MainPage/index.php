@@ -1,7 +1,7 @@
 <?php
 session_start();
 if(!$_SESSION["logged"]){
-    header("Location: http://192.168.58.132/Almacen/loggin.php");
+    header("Location: ../Almacen/loggin.php");
 }?>
 
 <html>
