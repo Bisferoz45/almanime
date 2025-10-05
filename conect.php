@@ -1,6 +1,5 @@
 <?php
-session_start();
-header("Location: ../loggin.php");
+//header("Location: ../loggin.php");
 
 $servername = "127.0.0.1";
 $username = "root";

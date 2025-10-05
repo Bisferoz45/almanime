@@ -10,11 +10,6 @@ if($_SESSION["logged"]){
         $email = $_SESSION["email"];
         $passwd = $_SESSION["passwd"];
 
-        $servername = "127.0.0.1";
-        $username = "root";
-        $password = "";
-
-
         try{
             $stmt = $conn->prepare("INSERT INTO almanime.users (username, email, passwd) VALUES(:username, :email, :passwd)");
             $stmt->bindParam(":username", $user);
@@ -42,10 +37,6 @@ if($_SESSION["logged"]){
         }else{
             $userEmail = $_SESSION["email"];
             $userPasswd = $_SESSION["passwd"];
-            
-            $servername = "127.0.0.1";
-            $username = "root";
-            $password = "";
 
             try{
                 $stmt = $conn->prepare("SELECT * FROM almanime.users WHERE email=:email");

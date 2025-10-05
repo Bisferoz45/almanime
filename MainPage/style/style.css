@@ -1,0 +1,7 @@
+#body{
+    background-color: aqua;
+}
+
+.aniCntnr{
+    flex-direction: row;
+}
