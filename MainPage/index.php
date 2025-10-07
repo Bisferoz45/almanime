@@ -11,7 +11,6 @@ if(!$_SESSION["logged"]){
 <html>
     <head>
         <title>AlmAnime</title>
-        <link rel="stylesheet" href="style/style.css">
     </head>
     <body>
         <header>
@@ -19,7 +18,8 @@ if(!$_SESSION["logged"]){
                 <p>Logo</p>
             </div>
             <div id="cntrMenu">
-                <a href="aniRegister.php"><button>Añadir libro</button></a>
+                <a href="../loggin.php"><button>Cerrar sesión</button></a>
+                <a href="aniRegister.php"><button>Añadir anime</button></a>
             </div>
         </header>
         <br>

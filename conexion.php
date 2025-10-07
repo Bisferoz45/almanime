@@ -20,7 +20,7 @@ if($_SESSION["logged"]){
             $_SESSION['error'] = "La cuenta ya se encuentra registrada.";
         }
 
-        if(!isset($_SESSION["error"]) && $_SESSION["error"] == ""){
+        if(isset($_SESSION["error"]) && $_SESSION["error"] != ""){
             header("Location: register.php");
         }else{
             $_SESSION["logged"] = true;

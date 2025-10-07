@@ -1,8 +1,18 @@
 <?php
 session_start();
+require "../conect.php";
 
 if(!$_SESSION["logged"]){
     header("Location: ../loggin.php");
+}
+
+$titulo = $_GET["id"];
+$stmt = $conn->prepare("SELECT * FROM almanime.animes WHERE titulo = ?");
+$stmt->execute([$titulo]);
+$anime = $stmt->fetch(PDO::FETCH_ASSOC);
+
+if($_SESSION["email"] != $anime["username"]){
+    header("Location: aniShow.php?id=" . $_GET["id"]);
 }
 ?>
 

@@ -9,7 +9,7 @@ if(!$_SESSION["logged"]){
         <title>AlmAnime</title>
     </head>
     <body>
-        <h2>Registro de libros</h2>
+        <h2>Registro de animes</h2>
         <form action="valAni.php" method="post" enctype="multipart/form-data">
             Titulo: <br> <input type="text" name="aniName" placeholder="Anime name"> <br> <br>
             Descripción: <br> <input type="text" name="desc" placeholder="Description"> <br> <br>
@@ -42,7 +42,7 @@ if(!$_SESSION["logged"]){
         </form>
 
         <?php
-            if(isset($_SESSION["error"])){
+            if(isset($_SESSION["error"]) && $_SESSION["error"] != ""){
                 print "ERROR: " . $_SESSION["error"];
                 $_SESSION["error"] = null;
             }
