@@ -15,6 +15,19 @@ if(!$_SESSION["log"]){
     if(isset($_POST["passwd1"]) && $_POST["passwd1"] == ""){
         $_SESSION["error"] = 'Establezca una contraseña ';
         $_SESSION["passwd"] = '';
+    }else{
+        if(strlen($_POST["passwd1"]) < 7){
+            $_SESSION["error"] = "La contraseña no cumple con el mínimo de longitud ";
+        }
+        if(preg_match('/[A-Z]/', $_POST["passwd1"]) == 0 || preg_match('/[a-z]/', $_POST["passwd1"]) == 0){
+            $_SESSION["error"] = "La contraseña debe tener mayúsculas y minúsculas ";
+        }
+        if(preg_match('/[0-9]/', $_POST["passwd1"]) == 0){
+            $_SESSION["error"] = "La contraseña debe tener números ";
+        }
+        if(preg_match('/[^a-zA-Z0-9]/', $_POST["passwd1"]) == 0){
+            $_SESSION["error"] = "La contraseña debe contener carácteres especiales ";
+        }
     }
 
     if(!filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)){

@@ -31,13 +31,13 @@ $_SESSION["logged"] = false;
             <h1>Registrarse</h1>
         </header>
         
-        <form action="validacion.php" method="POST">
-            Usuario: <input type="text" name="user" placeholder="Username" value="<?php echo $user?>"> <br>
-            E-mail: <input type="email" name="email" placeholder="example@domain.es" value="<?php echo $email?>"> <br>
-            Contraseña: <input type="password" name="passwd1" placeholder="Password" onkeyup="showHint(this.value)"> <br>
+        <form accept-charset="utf-8" action="validacion.php" method="POST">
+            Usuario: <input type="text" name="user" placeholder="Username" value="<?php echo $user?>" required> <br>
+            E-mail: <input type="email" name="email" placeholder="example@domain.ext" value="<?php echo $email?>" required> <br>
+            Contraseña: <input type="password" name="passwd1" placeholder="Password" onkeyup="showHint(this.value)" required> <br>
             Suggestions: <span id="txtHint"></span>
             
-            Confirmar contraseña: <input type="password" name="passwd2" placeholder="Confirm password"> <br>
+            Confirmar contraseña: <input type="password" name="passwd2" placeholder="Confirm password" required> <br>
             <input type="submit" name="submit"> <br> <br>
             <h3>Ya tiene una cuenta?:<h3> <a href="loggin.php"><input type="button" value="Logearse"></a>
         </form>
