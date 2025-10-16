@@ -24,6 +24,8 @@ $_SESSION["logged"] = false;
             <h3>Si aún no se ha registrado:<h3> <a href="./register.php"><button>Registrarse</button></a>
         </div>
 
+        
+
         <?php
             if(isset($_SESSION["error"]) && $_SESSION["error"] != ""){
                 echo "ERROR: " . $_SESSION["error"];

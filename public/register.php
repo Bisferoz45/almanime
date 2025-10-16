@@ -34,7 +34,7 @@ $_SESSION["logged"] = false;
         </header>
         <hr>
         <div class="body">
-            <form accept-charset="utf-8" action="../validations/userVal.php" method="POST">
+            <form accept-charset="utf-8" action="../validations/userVal.php" method="POST" enctype="multipart/form-data">
                 Usuario: <input type="text" name="user" placeholder="Username" value="<?php echo $user?>" required> <br>
                 E-mail: <input type="email" name="email" placeholder="example@domain.ext" value="<?php echo $email?>" required> <br>
                 Contraseña: <input type="password" name="passwd1" placeholder="Password" onkeyup="showHint(this.value)" required> <br>
@@ -53,7 +53,5 @@ $_SESSION["logged"] = false;
                 }
             ?>
         </div>
-
-        
     </body>
 </html>

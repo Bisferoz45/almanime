@@ -46,21 +46,43 @@ $_SESSION["error"] = '';
                     echo "<a href='./loggin.php'><button>Log in</button></a>";
                     echo "<a href='./register.php'><button>Register</button></a>";
                 }else{
-                    echo '<form method="post"><button type="submit" name="logout">Cerrar sesión</button></form>';
+                    require "../conection/conect.php";
+                    $row = $conn->prepare("SELECT imgprf FROM almanime.users WHERE email LIKE ?");
+                    $row->execute([$_SESSION["email"]]);
+                    $row = $row->fetch(PDO::FETCH_ASSOC);
+
+                    echo '<div id="profile">';
+                    echo '<button id="img_prf" style="background-image: url(' . $row["imgprf"] . ')"></button>';
+                    echo '<div id="prf_menu">';
+                    echo '<form method="post">';
+                    echo '<button type="submit" name="edit">Editar perfil</button>';
+                    echo '<button type="submit" name="logout">Cerrar sesión</button>';
+                    echo '</form>';
+                    echo '</div>';
+                    echo "</div>";
                 }
                 echo '</div>';
                 ?>
 
                 <?php
-                    if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['logout'])) {
-                    // destruye la sesión
-                    session_unset();
-                    session_destroy();
+                if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+                    switch(true){
+                        case isset($_POST['logout']) && isset($_POST['logout']) != "":
+                            session_unset();
+                            session_destroy();
+                            
+                            $_SESSION["logged"] = "";
+                            header("Location: " . $_SERVER['PHP_SELF']);
+                        break;
 
-                    // redirige antes de enviar HTML
-                    $_SESSION["logged"] = "";
-                    header("Location: " . $_SERVER['PHP_SELF']);
-                    exit();
+                        case isset($_POST['edit']) && isset($_POST['edit']) != "":
+                            header("Location: ./editPrf.php");
+                        break;
+
+                        default:
+                            header("Location: " . $_SERVER['PHP_SELF']);
+                        break;
+                    }
                 }
                 ?>
             </div>
@@ -91,5 +113,6 @@ $_SESSION["error"] = '';
                 ?>
             </div>
         </div>
+        <script src="../assets/scripts/prf_menu.js"></script>
     </body>
 </html>

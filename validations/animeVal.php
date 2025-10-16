@@ -28,7 +28,7 @@ if(!$_SESSION["logged"]){
     }else{
         //PROCESADO DE LA IMAGEN
         $dirRute = "img/";
-        $archName = $_FILES["img"]["name"];
+        $archName = preg_replace("/[^a-zA-Z0-9\._-]/", "_", $_FILES["img"]["name"]);
         $filePath = $dirRute . date("Y-m-d") . "_" . date("H-m") . "-" . $archName; //RUTA DEL ARCHIVO + EL NOMBRE QUE LLEVARÁ; ECHO DE MANERA QUE SEA MUY DIFICIL QUE SE REPITA
         
         if(!move_uploaded_file($_FILES["img"]["tmp_name"], $filePath)){

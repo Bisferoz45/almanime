@@ -48,6 +48,10 @@ button{
     background-color: #b8cfc9;
 }
 
+.cntrMenu{
+    margin-right: 5rem;
+}
+
 #cntrLogo{
     padding-left: 1rem;
 }
@@ -58,5 +62,24 @@ button{
     display: flex;
     justify-content: space-between;
     align-items: center;
+}
+
+#profile, #profile *{
+    margin: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#img_prf{
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    height: 40px;
+    width: 3rem;
+}
+
+#prf_menu{
+    visibility: hidden;
 }
 

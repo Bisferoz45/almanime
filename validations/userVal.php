@@ -46,10 +46,9 @@ if(!$_SESSION["log"]){
         $_SESSION["filePath"] = "../assets/img/img_prf/default_prf.jpg";
     }else{
         //PROCESADO DE LA IMAGEN
-        $dirRute = "../assets/img/img_prf/";
-        $archName = $_FILES["img"]["name"];
+        $dirRute =  "../assets/img/img_prf/";
+        $archName = preg_replace("/[^a-zA-Z0-9\._-]/", "_", $_FILES["img"]["name"]);
         $filePath = $dirRute . date("Y-m-d") . "_" . date("H-m") . "-" . $archName; //RUTA DEL ARCHIVO + EL NOMBRE QUE LLEVARÁ; ECHO DE MANERA QUE SEA MUY DIFICIL QUE SE REPITA
-        
         if(!move_uploaded_file($_FILES["img"]["tmp_name"], $filePath)){
             $_SESSION['error'] = "La imágen no se subió correctamente ";
         }else{
@@ -63,6 +62,8 @@ if(!$_SESSION["log"]){
         $_SESSION["passwd"] = password_hash($_POST["passwd1"], PASSWORD_DEFAULT);
         header("Location: ./userReg.php");
     }
+
+    print_r ($_SESSION["filePath"]);
 
 }else{
     $_SESSION["email"] = $_POST["email"];
