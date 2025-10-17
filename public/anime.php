@@ -22,7 +22,7 @@ session_start();
                     echo '<h1 class="headerTittle">Anime Data</h1>';
                     if(isset($_SESSION["logged"]) && $anime["user"] == $_SESSION["email"]){
                         echo '<div id="animeUserOpt">';
-                        echo '<a href="aniUpdate.php?id=' . urlencode($_GET["id"]) . '"><button>Editar anime</button></a>';
+                        echo '<a href="editAnm.php?id=' . urlencode($_GET["id"]) . '"><button>Editar anime</button></a>';
                         echo '<br><form action="" method="post">';
                         echo '<input type="submit" name="del" value="Borrar" class="button">';
                         echo '</form>';
@@ -32,12 +32,22 @@ session_start();
                 echo '<a href="index.php"><button>Volver</button></a>';
             ?>
             <?php
-                if($_SERVER['REQUEST_METHOD'] === 'POST'){
-                    switch(true){
-                        case isset($_POST['like']) && isset($_POST['like']) != "":
-                            $stmt = $conn->prepare("INSERT INTO almanime.vots VALUE (?, ?, ?)");
-                            $stmt->execute([$_GET["id"]]);
-                        break;
+                require "../conection/conect.php";
+                if($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_SESSION["logged"]) && $_SESSION["logged"] == true){
+                    $stmt = $conn->prepare('SELECT * FROM almanime.votes WHERE titulo LIKE ? AND user LIKE ?');
+                    $stmt->execute([$_GET['id'], $_SESSION["email"]]);
+                    if($stmt->rowCount() == 0){
+                        switch(true){
+                            case isset($_POST['like']) && isset($_POST['like']) != "":
+                                $stmt = $conn->prepare("INSERT INTO almanime.votes VALUE (?, ?, ?)");
+                                $stmt->execute([$_GET["id"], $_SESSION["email"], true]);
+                            break;
+
+                            case isset($_POST['dislike']) && isset($_POST['dislike']) != "":
+                                $stmt = $conn->prepare("INSERT INTO almanime.votes VALUE (?, ?, ?)");
+                                $stmt->execute([$_GET["id"], $_SESSION["email"], false]);
+                            break;
+                        }    
                     }
                 }
             ?>
@@ -54,8 +64,8 @@ session_start();
                         if($anime){
                             echo '<h1>' . htmlspecialchars($anime["titulo"]) . '</h1>';
                             echo '<div id="animeDataMenu" style="background-image: url(' . htmlspecialchars($anime["img"]) . ')">';
-                            echo '<p class="rating">Le gusta al: '. calcVotes($_GET["id"]) . '</p>';
-                            echo '<form method="post"><button value"like" id="like">Like</button><button value"dislike" id="dislike">Dislike</button></form>';
+                            echo '<p class="rating">Le gusta al: '. round(calcVotes($_GET["id"]), 2) . '%</p>';
+                            echo '<form method="post"><button name="like" value"like" id="like">Like</button><button name="dislike" value"dislike" id="dislike">Dislike</button></form>';
                             echo '</div>';
                             echo "<p>Descripción:<br>" . htmlspecialchars($anime["description"]) . "</p>";
                             echo "<p>Demografía: " . htmlspecialchars($anime["demo"]) . "</p>";
@@ -101,11 +111,10 @@ session_start();
 
     function calcVotes($id){
         require "../conection/conect.php";
-        $stmt = $conn->prepare("SELECT a.titulo, COUNT(v.vote) as votos_totales, (COUNT(v.vote)*100 / (SELECT COUNT(*) FROM almanime.votes)) AS prcj_votos FROM almanime.animes a LEFT JOIN almanime.votes v ON a.titulo = v.titulo WHERE a.titulo LIKE ? GROUP BY a.titulo");
+        $stmt = $conn->prepare("SELECT a.titulo, COUNT(v.vote) as vt, (((SELECT COUNT(vote) FROM almanime.votes WHERE vote = 1) / COUNT(v.vote)) * 100) as prcj_votos FROM almanime.animes a LEFT JOIN almanime.votes v ON a.titulo = v.titulo WHERE a.titulo LIKE ? GROUP BY a.titulo");
         $stmt->execute(["$id"]);
         $res = $stmt->fetch(PDO::FETCH_ASSOC);
-
-        if($res["votos_totales"] == 0){
+        if($res["vt"] == 0){
             return "No hay votaciónes de usuarios";
         }else{
             return $res["prcj_votos"];

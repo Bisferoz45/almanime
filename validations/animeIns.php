@@ -20,7 +20,7 @@ if(!$_SESSION["logged"]){
         $stmt = $conn->prepare("INSERT INTO almanime.animes (titulo, description, autor, demo, lnchdate, img, user) VALUES(?, ?, ?, ?, ?, ?, ?)");
         $stmt->execute([$title, $desc, $autor, $demo, $date, $filePath, $user]);
     }catch(PDOException $e){
-        $_SESSION['error'] = "Inserción en animes: " . $e->getMessage();
+        $_SESSION['error'] = "Inserción en animes: " . $e->getMessage() . " ";
     }
 
     foreach($genderArr as $gender){//TABLA ANIGENDER
@@ -28,7 +28,7 @@ if(!$_SESSION["logged"]){
             $stmt = $conn->prepare("INSERT INTO almanime.anigender VALUES(?, ?)");
             $stmt->execute([$title, $gender]);
         }catch(PDOException $e){
-            $_SESSION['error'] = "Inserción en anigender: " . $e->getMessage();
+            $_SESSION['error'] .= "Inserción en anigender: " . $e->getMessage();
         }
     }
 

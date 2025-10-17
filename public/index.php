@@ -42,7 +42,7 @@ $_SESSION["error"] = '';
             <div class="cntrMenu">
                 <?php
                 echo '<div id="userOpt">';
-                if(!(isset($_SESSION["logged"])) || $_SESSION["logged"] == ""){
+                if(!(isset($_SESSION["logged"])) || $_SESSION["logged"] == false){
                     echo "<a href='./loggin.php'><button>Log in</button></a>";
                     echo "<a href='./register.php'><button>Register</button></a>";
                 }else{
@@ -71,7 +71,7 @@ $_SESSION["error"] = '';
                             session_unset();
                             session_destroy();
                             
-                            $_SESSION["logged"] = "";
+                            $_SESSION["logged"] = false;
                             header("Location: " . $_SERVER['PHP_SELF']);
                         break;
 
@@ -89,7 +89,11 @@ $_SESSION["error"] = '';
         </header>
         <hr>
         <div class="body">
-            <a href="./animeReg.php"><button>Añadir anime</button></a><br>
+            <?php
+            if(isset($_SESSION["logged"]) && $_SESSION["logged"] == true){
+                echo '<a href="./animeReg.php"><button>Añadir anime</button></a><br>';
+            }
+            ?>
             BUSCADOR: <input type="serch" name="aniSerch" placeholder="Busca un anime" onkeyup="serchAnime(this.value)"><br>
             <div id="resAniSearch">
                 <?php

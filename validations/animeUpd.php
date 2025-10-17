@@ -97,53 +97,6 @@ if($_SESSION["email"] != $anime["username"]){
     }
     ?>
 
-<html>
-    <?php
-        if(!isset($_GET["id"])){
-            echo "No se seleccionó ningún anime.";
-        }else{
-            require "../conect.php";
-
-            $titulo = $_GET["id"];
-            $stmt = $conn->prepare("SELECT * FROM almanime.animes WHERE titulo = ?");;
-            $stmt->execute([$titulo]);
-            $anime = $stmt->fetch(PDO::FETCH_ASSOC);
-        
-            if($anime){
-                echo "<h1>Actualizar anime</h1>";
-                echo '<form action="" method="post" enctype="multipart/form-data">';
-                echo 'Titulo: <input type="text" name="aniName" placeholder="Anime name"> <br> <br>';
-                echo 'Descripción: <input type="text" name="desc" placeholder="Description"> <br> <br>';
-                echo 'Autor: <input type="text" name="autor" placeholder="Author name"> <br> <br>';
-                echo 'Demografía: <select name="demo">
-                                    <option vaue="">-- Seleccione una demografía --</option>
-                                    <option value="kodomo">Kodomo</option>
-                                    <option value="shonen">Shonen</option>
-                                    <option value="shoujo">Shoujo</option>
-                                    <option value="seinen">Seinen</option>
-                                    <option value="josei">Josei</option>
-                                  </select> <br> <br>';
-                echo 'Genero/s: <br>
-                        <input type="checkbox" name="genero[]" value="Accion"> Acción <br>
-                        <input type="checkbox" name="genero[]" value="Aventura"> Avenura <br>
-                        <input type="checkbox" name="genero[]" value="Ciencia Ficcion"> Ciencia ficcón <br>
-                        <input type="checkbox" name="genero[]" value="Drama"> Drama <br>
-                        <input type="checkbox" name="genero[]" value="Comedia"> Comedia <br>
-                        <input type="checkbox" name="genero[]" value="Ecchi"> Ecchi <br>
-                        <input type="checkbox" name="genero[]" value="Fantasia"> Fantasía <br>
-                        <input type="checkbox" name="genero[]" value="Gore"> Gore <br>
-                        <input type="checkbox" name="genero[]" value="Misterio"> Misterio <br>
-                        <input type="checkbox" name="genero[]" value="Terror"> Terror <br> <br>';
-                echo 'Fecha de lanzamiento: <input type="date" name="date"> <br> <br>';
-                echo 'Inserte imágen de portada: <input type="file" accept="image/*" name="img" placeholder="Insert image"> <br>';
-                echo '<input type="submit" name="submit" value="Enviar">';
-            }else{
-                echo "No se encontró ningún anime.";
-            }
-        }
-    ?>
-</html>
-
     <?php
     function update($title, $desc, $autor, $demo, $genders, $date, $filePath){
         require "../conect.php";
