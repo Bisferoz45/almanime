@@ -1,6 +1,6 @@
 <?php
 session_start();
-require "../conect.php";
+require "../conection/conect.php";
 
 $_SESSION["error"] = "";
 
@@ -13,33 +13,29 @@ if(!$_SESSION["logged"]){
     $autor = $_SESSION["autor"];
     $demo = $_SESSION["demo"];
     $genderArr = $_SESSION["genero"];
-    $gender = "";
     $date = $_SESSION["date"];
     $filePath = $_SESSION["filePath"];
-
-    foreach($genderArr as $value){
-        $gender .= $value . " ";
-    }
     
-    try{
-        $stmt = $conn->prepare("INSERT INTO almanime.animes (titulo, description, autor, demo, genders, lnchdate, img, username) VALUES(:titulo, :description, :autor, :demo, :genders, :lnchdate, :img, :username)");
-        $stmt->bindParam(":titulo", $title);
-        $stmt->bindParam(":description", $desc);
-        $stmt->bindParam(":autor", $autor);
-        $stmt->bindParam(":demo", $demo);
-        $stmt->bindParam(":genders", $gender);
-        $stmt->bindParam(":lnchdate", $date);
-        $stmt->bindParam(":img", $filePath);
-        $stmt->bindParam(":username", $user);
-        $stmt->execute();
+    try{//TABLA ANIMES
+        $stmt = $conn->prepare("INSERT INTO almanime.animes (titulo, description, autor, demo, lnchdate, img, user) VALUES(?, ?, ?, ?, ?, ?, ?)");
+        $stmt->execute([$title, $desc, $autor, $demo, $date, $filePath, $user]);
     }catch(PDOException $e){
-        $_SESSION['error'] = $e->getMessage();
+        $_SESSION['error'] = "Inserción en animes: " . $e->getMessage();
+    }
+
+    foreach($genderArr as $gender){//TABLA ANIGENDER
+        try{
+            $stmt = $conn->prepare("INSERT INTO almanime.anigender VALUES(?, ?)");
+            $stmt->execute([$title, $gender]);
+        }catch(PDOException $e){
+            $_SESSION['error'] = "Inserción en anigender: " . $e->getMessage();
+        }
     }
 
     if(isset($_SESSION["error"]) && $_SESSION["error"] != ""){
-        header("Location: aniRegister.php");
+        header("Location: ../public/animeReg.php");
     }else{
-        header("Location: index.php");
+        header("Location: ../public/index.php");
     }
 
     $conn = null;

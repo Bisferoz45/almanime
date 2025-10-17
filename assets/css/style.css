@@ -52,6 +52,137 @@ button{
     margin-right: 5rem;
 }
 
+.anime{
+    border: 4px solid #11421a;
+    border-radius: 3px;
+    height: 250px;
+    width: 160px;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    
+    display: flex;
+    flex-direction: column;           
+    justify-content: space-between;                     
+    padding: 5px;
+    box-sizing: border-box;
+}
+
+.aniTittle {
+    background: rgba(0, 0, 0, 0.726);
+    color: white;
+    text-transform: uppercase;
+    padding: 4px;
+    font-weight: bold;
+    font-size: 0.9rem;
+    border-radius: 4px;
+}
+
+.aniDemo {
+    background: rgba(0, 0, 0, 0.726); 
+    color: white;
+    text-transform: uppercase;
+    text-align: center;
+    padding: 4px;
+    font-weight: bold;
+    font-size: 0.9rem;
+    border-radius: 4px;
+}
+
+.aniDemo.shonen {
+    background: rgba(255, 187, 0, 0.671);  
+}
+
+.aniDemo.seinen {
+    background: rgba(155, 1, 1, 0.719);  
+}
+
+.aniDemo.shoujo {
+    background: rgba(233, 30, 99, 0.8);   
+}
+
+.aniDemo.josei {
+    background: rgba(156, 39, 176, 0.8);  
+}
+
+.aniDemo.kodomo {
+    background: rgba(76, 175, 80, 0.8);   
+}
+
+.rating{
+    background: rgba(0, 0, 0, 0.726);
+    color: white;
+    text-transform: uppercase;
+    padding: 4px;
+    font-weight: bold;
+    font-size: 0.9rem;
+    border-radius: 4px;
+}
+
+#animeDataMenu{
+    border: 4px solid #11421a;
+    border-radius: 3px;
+    max-width: 250px;
+    max-height: 350px;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    
+    display: flex;
+    flex-direction: column;           
+    justify-content: space-between;                     
+    padding: 5px;
+    box-sizing: border-box;
+}
+
+#animeDataMenu form{
+    display: flex;
+    justify-content: space-between;
+    align-items: stretch;
+    padding: 0;
+}
+
+#animeDataMenu form button{
+    width: 100%;
+    height: 100%;
+}
+
+#like{
+    color: white;
+    background-color: rgba(11, 112, 1, 0.829);
+}
+
+#dislike{
+    color: white;
+    background-color: rgba(117, 2, 2, 0.897);
+}
+
+#imgAnime{
+    border-radius: 3px;
+    max-height: 250px;
+    max-width: 250px;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+#animeUserOpt, #animeUserOpt form{
+    display: flex;
+    justify-content: space-between;
+    align-items: stretch;
+}
+
+#resAniSearch{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: start;
+}
+
+#resAniSearch a{
+    text-decoration: none;
+}
+
 #cntrLogo{
     padding-left: 1rem;
 }

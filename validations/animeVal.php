@@ -3,7 +3,7 @@ session_start();
 $_SESSION["error"] = "";
 
 if(!$_SESSION["logged"]){
-    header("Location: ../loggin.php");
+    header("Location: ../public/loggin.php");
 }else{
     if(!isset($_POST["aniName"]) || $_POST["aniName"] == ""){
         $_SESSION["error"] = "Rellene el campo del título. ";
@@ -24,10 +24,10 @@ if(!$_SESSION["logged"]){
         $_SESSION["error"] = "Establezca una fecha adecuada.";
     }
     if(!isset($_FILES['img']) || $_FILES['img']['error'] !== 0){
-        $_SESSION["filePath"] = "img/10032-default.png";
+        $_SESSION["filePath"] = "../assets/img/img_anm/10032-default.png";
     }else{
         //PROCESADO DE LA IMAGEN
-        $dirRute = "img/";
+        $dirRute = "../assets/img/img_anm/";
         $archName = preg_replace("/[^a-zA-Z0-9\._-]/", "_", $_FILES["img"]["name"]);
         $filePath = $dirRute . date("Y-m-d") . "_" . date("H-m") . "-" . $archName; //RUTA DEL ARCHIVO + EL NOMBRE QUE LLEVARÁ; ECHO DE MANERA QUE SEA MUY DIFICIL QUE SE REPITA
         
@@ -40,7 +40,7 @@ if(!$_SESSION["logged"]){
 
     
     if(isset($_SESSION["error"]) && $_SESSION["error"] != ""){
-        header("Location: aniRegister.php");
+        header("Location: ../public/animeReg.php");
     }else{
         $_SESSION["aniName"] = $_POST["aniName"];
         $_SESSION["desc"] = $_POST["desc"];
@@ -48,7 +48,7 @@ if(!$_SESSION["logged"]){
         $_SESSION["demo"] = $_POST["demo"];
         $_SESSION["genero"] = $_POST["genero"];
         $_SESSION["date"] = $_POST["date"];
-        header("Location: aniConn.php");
+        header("Location: ./animeIns.php");
     }
 }
 

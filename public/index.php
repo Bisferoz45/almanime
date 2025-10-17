@@ -19,7 +19,7 @@ $_SESSION["error"] = '';
                             document.getElementById("resAniSearch").innerHTML = this.responseText;
                         }
                     };
-                    xmlhttp.open("GET", "aniSearch.php?q=" + str, true);
+                    xmlhttp.open("GET", "animeSrc.php?q=" + str, true);
                     xmlhttp.send();
                 }else{
                     var xmlhttp = new XMLHttpRequest();
@@ -28,7 +28,7 @@ $_SESSION["error"] = '';
                             document.getElementById("resAniSearch").innerHTML = this.responseText;
                         }
                     };
-                    xmlhttp.open("GET", "aniSearch.php?q=" + str, true);
+                    xmlhttp.open("GET", "animeSrc.php?q=" + str, true);
                     xmlhttp.send();
                 }
             }
@@ -89,9 +89,9 @@ $_SESSION["error"] = '';
         </header>
         <hr>
         <div class="body">
-            <a href="aniRegister.php"><button>Añadir anime</button></a><br>
+            <a href="./animeReg.php"><button>Añadir anime</button></a><br>
             BUSCADOR: <input type="serch" name="aniSerch" placeholder="Busca un anime" onkeyup="serchAnime(this.value)"><br>
-            <div class="aniCntnr" id="resAniSearch">
+            <div id="resAniSearch">
                 <?php
                     showAnimesIndex();
 
@@ -101,9 +101,10 @@ $_SESSION["error"] = '';
                         $rows = $res->fetchAll(PDO::FETCH_ASSOC);
                         if($rows){
                             foreach($rows as $row){
-                                echo '<a href="aniShow.php?id=' . urldecode($row["titulo"]) .'">';
-                                echo '<div class="anime" style="background-image: url(' . htmlspecialchars($row["img"]) . ');';
-                                echo '<p class="aniTittle">' . htmlspecialchars($row["titulo"]) . '</p><p class ="aniDemo">' . htmlspecialchars($row["demo"]) . '</p>';
+                                echo '<a href="anime.php?id=' . urlencode($row["titulo"]) .'">';
+                                echo '<div class="anime" style="background-image: url(' . htmlspecialchars($row["img"]) . ');">';
+                                echo '<p class="aniTittle">' . htmlspecialchars($row["titulo"]) . '</p>';
+                                echo '<p class="aniDemo '. strtolower(htmlspecialchars($row["demo"])) .'">' . htmlspecialchars($row["demo"]) . '</p>';
                                 echo '</div></a>';
                             }
                         }else{
