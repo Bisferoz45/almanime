@@ -3,6 +3,20 @@ session_start();
 
 require "../conection/conect.php";
 $_SESSION["error"] = '';
+
+if ((!isset($_SESSION['logged']) || $_SESSION['logged'] !== true) && isset($_COOKIE['remember'])) {
+    $token = $_COOKIE['remember'];
+    $stmt = $conn->prepare("SELECT email FROM almanime.users WHERE token = ?");
+    $stmt->execute([$token]);
+    $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if ($user) {
+        $_SESSION['logged'] = true;
+        $_SESSION['email'] = $user['email'];
+    } else {
+        setcookie('remember', '', time() - 3600, '/');
+    }
+}
 ?>
 
 <html>
@@ -89,13 +103,14 @@ $_SESSION["error"] = '';
         </header>
         <hr>
         <div class="body">
+            <h1>Animes</h1>
             <?php
             if(isset($_SESSION["logged"]) && $_SESSION["logged"] == true){
                 echo '<a href="./animeReg.php"><button>Añadir anime</button></a><br>';
             }
             ?>
             BUSCADOR: <input type="serch" name="aniSerch" placeholder="Busca un anime" onkeyup="serchAnime(this.value)"><br>
-            <div id="resAniSearch">
+            <div id="resAniSearchIndex">
                 <?php
                     showAnimesIndex();
 

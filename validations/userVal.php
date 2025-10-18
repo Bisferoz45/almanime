@@ -63,11 +63,10 @@ if(!$_SESSION["log"]){
         header("Location: ./userReg.php");
     }
 
-    print_r ($_SESSION["filePath"]);
-
 }else{
     $_SESSION["email"] = $_POST["email"];
     $_SESSION["passwd"] = $_POST["passwd1"];
+    
     header("Location: ./userReg.php");
 }
 ?>

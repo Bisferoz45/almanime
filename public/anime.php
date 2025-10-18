@@ -104,7 +104,19 @@
                                     echo '<button name="like" value"like" id="like">Like</button>';
                                     echo '<button name="dislike" value"dislike" id="dislike">Dislike</button>';
                                 }else{
-                                    
+                                    switch(getVote($anime["titulo"], $_SESSION["email"])){
+                                        case 0:
+                                            echo '<button name="dislike" value"dislike" id="dislike">Dislike</button>';
+                                        break;
+
+                                        case 1:
+                                            echo '<button name="like" value"like" id="like">Like</button>';
+                                        break;
+
+                                        default:
+                                            echo '';
+                                        break;
+                                    }
                                 }
                                 echo '</form>';
                             }
@@ -165,7 +177,7 @@
 
     function alreadyVote($titulo, $user){
         require "../conection/conect.php";
-        $stmt = $conn->prepare("SELECT * almanime.votes WHERE titulo LIKE ? AND user LIKE ?");
+        $stmt = $conn->prepare("SELECT * FROM almanime.votes WHERE titulo LIKE ? AND user LIKE ?");
         $stmt->execute([$titulo, $user]);
         if($stmt->rowCount() > 0){
             return true;
@@ -174,8 +186,12 @@
         }
     }
 
-    function getVote(){
-        
+    function getVote($titulo, $user){
+        require "../conection/conect.php";
+        $stmt = $conn->prepare("SELECT vote FROM almanime.votes WHERE titulo LIKE ? AND user LIKE ?");
+        $stmt->execute([$titulo, $user]);
+        $vote = $stmt->fetch(PDO::FETCH_COLUMN);
+        return $vote;
     }
 ?>
 

@@ -1,9 +1,10 @@
 <?php
 session_start();
 require "../conection/conect.php";
+$_SESSION["error"] = "";
 
 if($_SESSION["logged"]){
-    header("Location: register.php");
+    header("Location: ../public/index.php");
 }else{
     if(!$_SESSION["log"]){ //Registro de usuarios
         $user = $_SESSION["user"];
@@ -49,10 +50,28 @@ if($_SESSION["logged"]){
 
                 if(!$res){
                     $_SESSION["error"] = "No se a hencontrado la cuenta.";
-                    header("Location: loggin.php");
+                    header("Location: ../public/loggin.php");
                 }else{
                     if(password_verify($userPasswd, $res['passwd'])){
                         $_SESSION["logged"] = true;
+                        if($_SESSION["error"] == ""){
+                            $token = bin2hex(random_bytes(32));
+                            setcookie('remember', $token, time() + (7 * 24 * 60 * 60),'/', '', false, true);
+
+                            try{
+                                $stmt = $conn->prepare("UPDATE almanime.users SET token = ? WHERE email = ?");
+                                $stmt->execute([$token, $userEmail]);
+                            }catch(PDOException $e){
+                                $_SESSION["error"] = "Error al insertar el token" . $e->getMessage();
+                            }
+                        }
+                    
+                        if(isset($_SESSION["error"]) && $_SESSION["error"] != ""){
+                            header("Location: ../public/loggin.php");
+                        }else{
+                            $_SESSION["logged"] = true;
+                            header("Location: ../public/index.php");
+                        }
                         header("Location: ../public/index.php");
                     }else{
                         $_SESSION["error"] = "La contraseña es incorrecta.";
@@ -66,7 +85,6 @@ if($_SESSION["logged"]){
             }catch(PDOException $e){
                 $_SESSION["error"] = $e->getMessage();
             }
-
             $conn = null;
         }
     }
