@@ -1,5 +1,34 @@
 <?php
-session_start();
+    session_start();
+    require "../conection/conect.php";
+
+
+    if($_SESSION["logged"]){
+        $stmt = $conn->prepare("SELECT user FROM almanime.animes WHERE titulo LIKE ?");
+        $stmt->execute([$_GET["id"]]);
+        $count = $stmt->fetch(PDO::FETCH_COLUMN);
+        
+        $stmt = $conn->prepare("SELECT user FROM almanime.views WHERE user LIKE ? AND titulo LIKE ?");
+        $stmt->execute([$_SESSION["email"], $_GET["id"]]);
+        if($stmt->rowCount() > 0) {
+            $alreadyView = true;
+        }else{
+            $alreadyView = false;
+        }
+
+        if($count !== $_SESSION["email"] && !$alreadyView){
+            $stmt = $conn->prepare("SELECT view FROM almanime.animes WHERE titulo LIKE ?");
+            $stmt->execute([$_GET["id"]]);
+            $view = $stmt->fetch(PDO::FETCH_COLUMN);
+            $view++;
+
+            $stmt = $conn->prepare("UPDATE almanime.animes SET view = ? WHERE titulo LIKE ?");
+            $stmt->execute([$view , $_GET["id"]]);
+
+            $stmt = $conn->prepare("INSERT INTO almanime.views (titulo, user) VALUES (?, ?)");
+            $stmt->execute([$_GET["id"], $_SESSION["email"]]);
+        }
+    }
 ?>
 
 <?php
@@ -20,7 +49,7 @@ session_start();
                 if(isset($_GET["id"])){
                     $anime = animeData($_GET["id"]);
                     echo '<h1 class="headerTittle">Anime Data</h1>';
-                    if(isset($_SESSION["logged"]) && $anime["user"] == $_SESSION["email"]){
+                    if($_SESSION["logged"] && $anime["user"] == $_SESSION["email"]){
                         echo '<div id="animeUserOpt">';
                         echo '<a href="editAnm.php?id=' . urlencode($_GET["id"]) . '"><button>Editar anime</button></a>';
                         echo '<br><form action="" method="post">';
@@ -33,7 +62,7 @@ session_start();
             ?>
             <?php
                 require "../conection/conect.php";
-                if($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_SESSION["logged"]) && $_SESSION["logged"] == true){
+                if($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_SESSION["logged"]) && $_SESSION["logged"]){
                     $stmt = $conn->prepare('SELECT * FROM almanime.votes WHERE titulo LIKE ? AND user LIKE ?');
                     $stmt->execute([$_GET['id'], $_SESSION["email"]]);
                     if($stmt->rowCount() == 0){
@@ -60,12 +89,25 @@ session_start();
                         echo "No se seleccionó ningún anime.";
                     }else{
                         $anime = animeData($_GET["id"]);
-
+                        
                         if($anime){
                             echo '<h1>' . htmlspecialchars($anime["titulo"]) . '</h1>';
                             echo '<div id="animeDataMenu" style="background-image: url(' . htmlspecialchars($anime["img"]) . ')">';
-                            echo '<p class="rating">Le gusta al: '. round(calcVotes($_GET["id"]), 2) . '%</p>';
-                            echo '<form method="post"><button name="like" value"like" id="like">Like</button><button name="dislike" value"dislike" id="dislike">Dislike</button></form>';
+                            if(is_numeric(calcVotes($_GET["id"]))){
+                                echo '<p class="rating">Le gusta al: '. round(calcVotes($_GET["id"]) ,2) . '%</p>';
+                            }else{
+                                echo '<p class="rating">Le gusta al: '. calcVotes($_GET["id"]) . '</p>';
+                            }
+                            if($_SESSION["logged"] && $_SESSION["email"] !== $anime["user"]){
+                                echo '<form method="post">';
+                                if(!alreadyVote($anime["titulo"], $_SESSION["email"])){
+                                    echo '<button name="like" value"like" id="like">Like</button>';
+                                    echo '<button name="dislike" value"dislike" id="dislike">Dislike</button>';
+                                }else{
+                                    
+                                }
+                                echo '</form>';
+                            }
                             echo '</div>';
                             echo "<p>Descripción:<br>" . htmlspecialchars($anime["description"]) . "</p>";
                             echo "<p>Demografía: " . htmlspecialchars($anime["demo"]) . "</p>";
@@ -119,7 +161,21 @@ session_start();
         }else{
             return $res["prcj_votos"];
         }
+    }
 
+    function alreadyVote($titulo, $user){
+        require "../conection/conect.php";
+        $stmt = $conn->prepare("SELECT * almanime.votes WHERE titulo LIKE ? AND user LIKE ?");
+        $stmt->execute([$titulo, $user]);
+        if($stmt->rowCount() > 0){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    function getVote(){
+        
     }
 ?>
 
