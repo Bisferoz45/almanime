@@ -13,62 +13,84 @@ if(!(isset($_SESSION["logged"])) || $_SESSION["logged"] == ""){
         <link rel="stylesheet" href="../assets/css/style.css">
         <?php
             if($_SERVER['REQUEST_METHOD'] === "POST"){
-                if($_POST["passwd1"] !== $_POST["passwd2"]){
-                    $_SESSION["error"] = 'Las contraseñas no coinciden ';
-                }
-            
-                if(isset($_POST["passwd1"]) && $_POST["passwd1"] == ""){
-                    $_SESSION["error"] = 'Establezca una contraseña ';
-                }else{
-                    if(strlen($_POST["passwd1"]) < 7){
-                        $_SESSION["error"] = "La contraseña no cumple con el mínimo de longitud ";
-                    }
-                    if(preg_match('/[A-Z]/', $_POST["passwd1"]) == 0 || preg_match('/[a-z]/', $_POST["passwd1"]) == 0){
-                        $_SESSION["error"] = "La contraseña debe tener mayúsculas y minúsculas ";
-                    }
-                    if(preg_match('/[0-9]/', $_POST["passwd1"]) == 0){
-                        $_SESSION["error"] = "La contraseña debe tener números ";
-                    }
-                    if(preg_match('/[^a-zA-Z0-9]/', $_POST["passwd1"]) == 0){
-                        $_SESSION["error"] = "La contraseña debe contener carácteres especiales ";
-                    }
-                    
-                    $passwd = $_POST["passwd1"];
-                }
-            
-                if(!filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)){
-                    $_SESSION['error'] .= 'El email es invaido ';
-                }else{
-                    $email = $_POST['email'];
-                }
-            
-                if(empty($_POST["user"])){
-                    $_SESSION["error"] .= "Debe introducir un usuario ";
-                }else{
-                    $user = $_POST["user"];
-                }
-            
-                if(!isset($_FILES['img']) || $_FILES['img']['error'] !== 0){
-                    $usr = userData($_SESSION["email"]);
-                    $filepath = $usr["imgprf"];
-                }else{
-                    //PROCESADO DE LA IMAGEN
-                    $dirRute =  "../assets/img/img_prf/";
-                    $archName = preg_replace("/[^a-zA-Z0-9\._-]/", "_", $_FILES["img"]["name"]);
-                    $filePath = $dirRute . date("Y-m-d") . "_" . date("H-m") . "-" . $archName; //RUTA DEL ARCHIVO + EL NOMBRE QUE LLEVARÁ; ECHO DE MANERA QUE SEA MUY DIFICIL QUE SE REPITA
-                    if(!move_uploaded_file($_FILES["img"]["tmp_name"], $filePath)){
-                        $_SESSION['error'] = "La imágen no se subió correctamente ";
-                    }
-                }
-            
-                if(isset($_SESSION["error"]) && $_SESSION["error"] != ''){
-                    exit;
-                }else{
-                    $passwd = password_hash($passwd, PASSWORD_DEFAULT);
-                    if(updateUser($user, $email, $passwd, $filepath, $_SESSION["email"])){
-                        $_SESSION["email"] = $email;
-                        $_SESSION["username"] = $user;
-                    }
+                switch(true){
+                    case (isset($_POST['user']) && $_POST['user'] != "") || (isset($_POST['email']) && $_POST['email'] != ""):
+                        if(isset($_POST["email"]) && filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)){
+                            $email = $_POST['email'];
+                        }else{
+                            $user = userData($_SESSION["email"]);
+                            $email = $user["email"];
+                        }
+
+                        if(!empty($_POST["user"])){
+                            $user = $_POST["user"];
+                        }else{
+                            $usr = userData($_SESSION["email"]);
+                            $user = $usr["user"];
+                        }
+
+                        $usr = userData($_SESSION["email"]);
+                        if(updateUser($user, $email, $usr["passwd"], $usr["imgprf"], $_SESSION["email"])){
+                            if($_POST["email"] != $_SESSION["email"]){
+                                $_SESSION["email"] = $_POST["email"];
+                                $_SESSION["user"] = $_POST["user"];
+                            }
+                        }else{
+                            $_SESSION["error"] = "Los error al actualizar";
+                        }
+                    break;
+
+                    case (isset($_POST['passwd1']) && $_POST['passwd1'] != "") && (isset($_POST['passwd2']) && $_POST['passwd2'] != ""):
+                        if($_POST["passwd1"] == $_POST["passwd2"]){
+                            if(isset($_POST["passwd1"]) && $_POST["passwd1"] == ""){
+                                $_SESSION["error"] = 'Establezca una contraseña ';
+                            }else{
+                                if(strlen($_POST["passwd1"]) < 7){
+                                    $_SESSION["error"] = "La contraseña no cumple con el mínimo de longitud ";
+                                }
+                                if(preg_match('/[A-Z]/', $_POST["passwd1"]) == 0 || preg_match('/[a-z]/', $_POST["passwd1"]) == 0){
+                                    $_SESSION["error"] = "La contraseña debe tener mayúsculas y minúsculas ";
+                                }
+                                if(preg_match('/[0-9]/', $_POST["passwd1"]) == 0){
+                                    $_SESSION["error"] = "La contraseña debe tener números ";
+                                }
+                                if(preg_match('/[^a-zA-Z0-9]/', $_POST["passwd1"]) == 0){
+                                    $_SESSION["error"] = "La contraseña debe contener carácteres especiales ";
+                                }
+
+                                if($_SESSION["error"] == ""){
+                                    $passwd = $_POST["passwd1"];
+                                    $passwd = password_hash($passwd, PASSWORD_DEFAULT);
+                                    $usr = userData($_SESSION["email"]);
+                                    updateUser($usr["username"], $usr["email"], $passwd, $usr["imgprf"], $_SESSION["email"]);
+                                }
+                            }
+                        }else{
+                            $_SESSION["error"] = 'Las contraseñas no coinciden ';
+                        }
+                    break;
+
+                    case isset($_POST["img"]) && $_POST["img"] != "":
+                        $filepath = "";
+                        if(!isset($_FILES['img']) || $_FILES['img']['error'] !== 0){
+                            $usr = userData($_SESSION["email"]);
+                            $filepath = $usr["imgprf"];
+                        }else{
+                            //PROCESADO DE LA IMAGEN
+                            $dirRute =  "../assets/img/img_prf/";
+                            $archName = preg_replace("/[^a-zA-Z0-9\._-]/", "_", $_FILES["img"]["name"]);
+                            $filepath = $dirRute . date("Y-m-d") . "_" . date("H-m") . "-" . $archName; //RUTA DEL ARCHIVO + EL NOMBRE QUE LLEVARÁ; ECHO DE MANERA QUE SEA MUY DIFICIL QUE SE REPITA
+                            if(!move_uploaded_file($_FILES["img"]["tmp_name"], $filepath)){
+                                $_SESSION['error'] = "La imágen no se subió correctamente ";
+                            }
+                        }
+                        $usr = userData($_SESSION["email"]);
+                        updateUser($usr["username"], $usr["email"], $usr["passwd"], $filepath, $_SESSION["email"]);
+                    break;
+
+                    default:
+                        $_SESSION["error"] = "Algo salió mal en la inserción de datos";
+                    break;
                 }
             }
         ?>
@@ -104,18 +126,27 @@ if(!(isset($_SESSION["logged"])) || $_SESSION["logged"] == ""){
             <h1 id="prfTittle">Editar perfil</h1>
             <div id="prfEdit">
                 <?php $user = userData($_SESSION["email"]) ?>
-                <form accept-charset="utf-8" method="POST" enctype="multipart/form-data">
-                    Usuario: <input type="text" name="user" placeholder="Username" value="<?php print $user["username"] ?>" required> <br>
-                    E-mail: <input type="email" name="email" placeholder="example@domain.ext" value="<?php echo $user["email"]?>" required> <br>
-                    Contraseña: <input type="password" name="passwd1" placeholder="Password" onkeyup="showHint(this.value)" required> <br>
-                    Confirmar contraseña: <input type="password" name="passwd2" placeholder="Confirm password" required> <br>
-                    <article class="sugList">Suggestions: <span id="txtHint"></span></article>
-                    Inserte imágen de portada: <input type="file" accept="image/*" name="img" placeholder="Insert image"> <br>
+                <form class="userEditForm" accept-charset="utf-8" method="POST">
+                    <h2>Cambiar nombre y correo</h2>
+                    Usuario: <input type="text" name="user" placeholder="Username" value="<?php print $user["username"] ?>"> <br>
+                    E-mail: <input type="email" name="email" placeholder="example@domain.ext" value="<?php echo $user["email"]?>"> <br>
                     <input type="submit" name="submit" class="button"> <br> <br>
+                </form>
+                <form class="userEditForm" accept-charset="utf-8" method="POST">
+                    <h2>Cambiar contraseña</h2>
+                    Contraseña: <input type="password" name="passwd1" placeholder="Password" onkeyup="showHint(this.value)"> <br>
+                    Confirmar contraseña: <input type="password" name="passwd2" placeholder="Confirm password"> <br>
+                    <article class="sugList">Suggestions: <span id="txtHint"></span></article>
+                    <input type="submit" name="submit" class="button"> <br> <br>
+                </form>
+                <form class="userEditForm" accept-charset="utf-8" method="POST" enctype="multipart/form-data">
+                    <h2>Cambiar imágen de perfíl</h2>
+                    Inserte imágen de portada: <input type="file" accept="image/*" name="img" placeholder="Insert image"> <br>
+                    <input type="submit" name="img" class="button"> <br> <br>
                 </form>
                 <?php
                     if(isset($_SESSION["error"]) && $_SESSION["error"] != ""){
-                        echo "ERROR: " . $_SESSION["error"];
+                        print "ERROR: " . $_SESSION["error"];
                         $_SESSION["error"] = null;
                     }
                 ?>

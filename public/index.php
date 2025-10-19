@@ -4,6 +4,7 @@ session_start();
 require "../conection/conect.php";
 $_SESSION["error"] = '';
 
+
 if ((!isset($_SESSION['logged']) || $_SESSION['logged'] !== true) && isset($_COOKIE['remember'])) {
     $token = $_COOKIE['remember'];
     $stmt = $conn->prepare("SELECT email FROM almanime.users WHERE token = ?");
@@ -84,6 +85,7 @@ if ((!isset($_SESSION['logged']) || $_SESSION['logged'] !== true) && isset($_COO
                         case isset($_POST['logout']) && isset($_POST['logout']) != "":
                             session_unset();
                             session_destroy();
+                            setcookie('remember', '', time() - 3600, '/');
                             
                             $_SESSION["logged"] = false;
                             header("Location: " . $_SERVER['PHP_SELF']);

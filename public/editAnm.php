@@ -46,7 +46,7 @@ if(!$_SESSION["logged"] || $_SESSION["email"] != $row["user"]){
                         $rows = $conn->query("SELECT * FROM almanime.demography");
                         $rows = $rows->fetchAll(PDO::FETCH_ASSOC);
                         foreach($rows as $row){
-                            if($row == $demo){
+                            if(strtolower($row["demo"]) == strtolower($demo)){
                                 echo '<option value="' . strtolower($row["demo"]) . '" selected>' . $row["demo"] . '</option>';
                             }else{
                                 echo '<option value="' . strtolower($row["demo"]) . '">' . $row["demo"] . '</option>';

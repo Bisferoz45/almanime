@@ -136,6 +136,14 @@ button{
     border-radius: 4px;
 }
 
+.userEditForm{
+    background-color: #d4d4d4;
+    border: 4px solid #11421a;
+    width: 600px;
+    border-radius: 2px;
+    padding-left: 10px;
+}
+
 #animeDataMenu{
     border: 4px solid #11421a;
     border-radius: 3px;

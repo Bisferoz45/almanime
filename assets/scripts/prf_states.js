@@ -7,7 +7,7 @@ const profile_text = document.getElementById("prfTittle");
 edit_button.addEventListener("click", () => {
     stats_panel.style.display = "none";
     edit_button.style.display = "none";
-    edit_panel.style.display = "flex";
+    edit_panel.style.display = "inline";
     stats_button.style.display = "inline";
     profile_text.textContent = "Editar perfil";
 });
